@@ -29,7 +29,6 @@ class UserController extends Controller
         $user->save();
         return response()->json(['message'=>'Successfully Created user'],201);
     }
-
     public function login(Request $request)
     {
         $this->validate($request, [
