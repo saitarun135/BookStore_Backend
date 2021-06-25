@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\PasswordResetRequestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ChangePasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +32,12 @@ Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
 ], function ($router) {
-   Route::post('/login', [UserController::class, 'login']);
+    Route::post('/login', [UserController::class, 'login']);
     Route::post('/register', [UserController::class, 'register']);
-   
+    Route::post('/sendPasswordResetLink', 'App\Http\Controllers\PasswordResetRequestController@sendEmail');
+    //Route::get('/email/verify/{id}',[VerificationController::class,'verify']);
+    Route::post('/resetPassword', 'App\Http\Controllers\ChangePasswordController@passwordResetProcess');
+
+    
+
 });
