@@ -34,9 +34,9 @@ Route::group([
 ], function ($router) {
     Route::post('/login', [UserController::class, 'login']);
     Route::post('/register', [UserController::class, 'register']);
-    Route::post('/sendPasswordResetLink', 'App\Http\Controllers\PasswordResetRequestController@sendEmail');
+    Route::post('/sendPasswordResetLink', 'App\Http\Controllers\PasswordResetRequestController@forgotPassword');
     //Route::get('/email/verify/{id}',[VerificationController::class,'verify']);
-    Route::post('/resetPassword', 'App\Http\Controllers\ChangePasswordController@passwordResetProcess');
+    Route::post('/resetPassword', 'App\Http\Controllers\ChangePasswordController@resetPassword');
 
     
 
