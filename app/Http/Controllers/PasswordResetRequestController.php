@@ -19,7 +19,7 @@ class PasswordResetRequestController extends Controller
     {
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json(['message' => 'Email doesn\'t found on our database'], 401);
+            return response()->json(['error' => 'Email doesn\'t found on our database'],Response::HTTP_NOT_FOUND);
         }
         $passwordReset = PasswordReset::updateOrCreate(
             ['email' => $user->email],
@@ -31,7 +31,7 @@ class PasswordResetRequestController extends Controller
         if ($user && $passwordReset) {
             $user->notify(new ResetPasswordNotification($passwordReset->token));
         }
-        return response()->json(['message' => 'Reset link is send successfully, please check your inbox.']);
+        return response()->json(['data' => 'Reset link is send successfully, please check your inbox.'], Response::HTTP_OK);
     }
 }
     
