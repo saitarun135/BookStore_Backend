@@ -16,13 +16,13 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'fullName'=>'required|string|between:3,15',
-            'emailID'=>'required|email|unique:users',
+            'email'=>'required|email|unique:users',
             'password'=>'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'mobile'=>'required|digits:10'
             ]);
         $user = new User([
             'fullName'=> $request->input('fullName'),
-            'emailID'=> $request->input('emailID'),
+            'email'=> $request->input('email'),
             'password'=> bcrypt($request->input('password')),
             'mobile'=>$request->input('mobile')           
         ]);
@@ -32,10 +32,10 @@ class UserController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            'emailID' => 'required|email',
+            'email' => 'required|email',
             'password' => 'required'
         ]);
-        $credentials = $request->only('emailID', 'password');
+        $credentials = $request->only('email', 'password');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Invalid Credentials'], 401);
