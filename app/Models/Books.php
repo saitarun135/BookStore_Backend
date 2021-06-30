@@ -15,7 +15,8 @@ class Books extends Model
         'title',
         'quantity',
         'ratings',
-        'author'   
+        'author' ,
+        'description'  
     ];
     protected $hidden = [
         'password',
