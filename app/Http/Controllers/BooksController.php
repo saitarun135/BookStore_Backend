@@ -9,6 +9,7 @@ use App\Http\Requests;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Books as BooksResource;
 use App\Http\Middleware\Authenticate;
+use Illuminate\Support\Facades\Storage;
 
 class BooksController extends Controller
 {
@@ -31,12 +32,29 @@ class BooksController extends Controller
     public function AddBooks(Request $request)
     {
         $book=new Books();
-        $book->name=$request->input('name');
-        //$book->image=$request->input('image'); 
+        $book->image=$request->input('image'); 
+        if($request->hasfile('image'))
+            {  
+            $file = $request->file('image');
+            $imageName=time().$file->getClientOriginalName();
+            $filePath = 'images/' . $imageName;
+            Storage::disk('s3')->put($filePath, file_get_contents($file));
+              $book->image=$imageName;
+            }
+          
+            // if($request->hasFile('image')){
+            //     $file = $request->file('image');
+            //     $extension = $file->getClientOriginalExtension();
+            //     $filename = time() . '.' . $extension;
+            //     $file->move('uploads/books/', $filename);
+            //     $book->image = $filename;
+            // } else{
+            //     return $request;
+            //     $book->image = '';
+            // }
         $book->price=$request->input('price');
         $book->title=$request->input('title');
         $book->quantity=$request->input('quantity');
-        $book->ratings=$request->input('ratings');
         $book->author=$request->input('author');
         $book->description=$request->input('description');
         $book->user_id = auth()->id();          
@@ -72,12 +90,12 @@ class BooksController extends Controller
     {
         $book=Books::findOrFail($id);
         if($book->user_id==auth()->id()){
-            $book->name=$request->input('name');
-            //$book->image=$request->input('image'); 
+            //$book->name=$request->input('name');
+            $book->image=$request->input('image'); 
             $book->price=$request->input('price');
             $book->title=$request->input('title');
             $book->quantity=$request->input('quantity');
-            $book->ratings=$request->input('ratings');
+            //$book->ratings=$request->input('ratings');
             $book->author=$request->input('author');
             $book->description=$request->input('description');
             $book->save();
