@@ -36,23 +36,14 @@ Route::group([
     Route::post('/login', [UserController::class, 'login']);
     Route::post('/register', [UserController::class, 'register']);
     Route::post('/sendPasswordResetLink', 'App\Http\Controllers\PasswordResetRequestController@forgotPassword');
-    //Route::get('/email/verify/{id}',[VerificationController::class,'verify']);
     Route::post('/resetPassword', 'App\Http\Controllers\ChangePasswordController@resetPassword');
 
 });
 
-// Route::group(["middleware"=>['auth.jwt']],function(){
-//     Route::post('addBooks',[BooksController::class,'addBooks']);
-//     Route::get('displayBooks',[BooksController::class,'DisplayBooks']);
-//     Route::get('showBook/{id}',[BooksController::class,'ShowBook']);
-//     Route::put('updateBook/{id}',[BooksController::class,'UpdateBook']);
-//     Route::delete('deleteBook/{id}',[BooksController::class,'DeleteBook']);
-// });
-
 Route::group(["middleware"=>['auth.jwt']],function(){
     Route::post('addBooks',[FileController::class,'upload']);
     Route::get('getBooks',[FileController::class,'displayBooks']);
-    // Route::get('showBook/{id}',[BooksController::class,'ShowBook']);
+    Route::get('showBook/{id}',[FileController::class,'display_Book']);
     Route::put('updateBook/{id}',[FileController::class,'updateBook']);
     Route::delete('deleteBook/{id}',[FileController::class,'DeleteBook']);
 });
