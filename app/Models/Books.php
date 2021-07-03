@@ -9,14 +9,12 @@ class Books extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        // 'image',
+        'file',
         'price',
-        'title',
+        'name',
         'quantity',
-        'ratings',
-        'author' ,
-        'description'  
+        'description',
+        'author'
     ];
     protected $hidden = [
         'password',
