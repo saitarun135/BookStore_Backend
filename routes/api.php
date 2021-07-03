@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\BooksController;
+use App\Http\Controllers\FileController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,10 +41,18 @@ Route::group([
 
 });
 
+// Route::group(["middleware"=>['auth.jwt']],function(){
+//     Route::post('addBooks',[BooksController::class,'addBooks']);
+//     Route::get('displayBooks',[BooksController::class,'DisplayBooks']);
+//     Route::get('showBook/{id}',[BooksController::class,'ShowBook']);
+//     Route::put('updateBook/{id}',[BooksController::class,'UpdateBook']);
+//     Route::delete('deleteBook/{id}',[BooksController::class,'DeleteBook']);
+// });
+
 Route::group(["middleware"=>['auth.jwt']],function(){
-    Route::post('addBooks',[BooksController::class,'AddBooks']);
-    Route::get('displayBooks',[BooksController::class,'DisplayBooks']);
-    Route::get('showBook/{id}',[BooksController::class,'ShowBook']);
-    Route::put('updateBook/{id}',[BooksController::class,'UpdateBook']);
-    Route::delete('deleteBook/{id}',[BooksController::class,'DeleteBook']);
+    Route::post('addBooks',[FileController::class,'upload']);
+    Route::get('getBooks',[FileController::class,'displayBooks']);
+    // Route::get('showBook/{id}',[BooksController::class,'ShowBook']);
+    Route::put('updateBook/{id}',[FileController::class,'updateBook']);
+    Route::delete('deleteBook/{id}',[FileController::class,'DeleteBook']);
 });
