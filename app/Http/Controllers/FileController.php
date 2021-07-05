@@ -62,9 +62,9 @@ class FileController extends Controller
         return User::find($books->user_id=auth()->id())->books; 
     }
     public function updateBook(Request $request, $id){
-        $book=Books::findOrFail($id);
-        if($book->user_id==auth()->id()){
-            $book=Books::where('id',$id)
+      
+       
+            $book=Books::where('id')
                 ->update(array('name'=>$request->input('name'),
                                'price' => $request->input('price'),
                                'author' => $request->input('author'),
@@ -72,7 +72,7 @@ class FileController extends Controller
                                'quantity'=>$request->input('quantity')
             ));
             return['updated successfully'];
-        }
+        
     }
     
     public function DeleteBook($id)
