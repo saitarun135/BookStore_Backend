@@ -38,14 +38,12 @@ class FileController extends Controller
         $book->user_id = auth()->id();
         $book->save();
        return new BookResource($book);
-               
-    
-}
+    }
 
     public function destroy($image)
     {
-            Storage::disk('s3')->delete('apiDocs/' . $image);
-            return ['Image was deleted successfully'];
+        Storage::disk('s3')->delete('apiDocs/' . $image);
+        return ['Image was deleted successfully'];
     }
 
     public function display_Book($id)
@@ -62,6 +60,19 @@ class FileController extends Controller
     {
         $books=Books::all();
         return User::find($books->user_id=auth()->id())->books; 
+    }
+    public function updateBook(Request $request, $id){
+        $book=Books::findOrFail($id);
+        if($book->user_id==auth()->id()){
+            $book=Books::where('id',$id)
+                ->update(array('name'=>$request->input('name'),
+                               'price' => $request->input('price'),
+                               'author' => $request->input('author'),
+                               'description'=>$request->input('description'),
+                               'quantity'=>$request->input('quantity')
+            ));
+            return['updated successfully'];
+        }
     }
     
     public function DeleteBook($id)
