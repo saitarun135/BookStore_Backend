@@ -7,11 +7,14 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Lang;
 
+
 class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
     public $token;
+    
+
 
     /**
      * Create a new notification instance.
@@ -42,11 +45,14 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail($temp)
     {
+
+        $url = url("http://localhost:8080/reset/$this->token");
         return (new MailMessage)
                     ->subject(Lang::get('Reset Password Link!'))
                     ->line(Lang::get('You are receiving this email because we received a request for password reset'))
-                    ->line(Lang::get('Copy the token'))
-                    ->with($this->token)
+                    // ->line(Lang::get('Copy the token'))
+                    // ->with($this->token)
+                    ->action('Reset Password',url($url))
                     ->line('If you did not request a password reset, no further action is required!');
                    
     }
