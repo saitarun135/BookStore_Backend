@@ -20,7 +20,7 @@ class CreateBooksTable extends Migration
             $table->integer('price');
             $table->integer('quantity');
             $table->string('file')->nullable();
-            $table->string('description');
+            $table->longText('description');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
