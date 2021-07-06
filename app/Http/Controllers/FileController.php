@@ -80,7 +80,6 @@ class FileController extends Controller
             return['updated successfully'];
         }
     }
-    
     public function DeleteBook($id)
     {
         $book=Books::findOrFail($id);
