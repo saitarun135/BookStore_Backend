@@ -34,4 +34,4 @@ class PasswordResetRequestController extends Controller
         return response()->json(['data' => 'Reset link is send successfully, please check your inbox.'], Response::HTTP_OK);
     }
 }
-    
+   

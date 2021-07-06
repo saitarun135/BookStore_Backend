@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserController extends Controller
 {
+    // AWS_USE_PATH_STYLE_ENDPOINT=false
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }

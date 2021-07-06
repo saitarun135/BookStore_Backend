@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Books;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
@@ -27,19 +28,23 @@ class FileController extends Controller
             return ['welcome'];
     }
 
-    public function upload(Request $request){
+    public function upload(Request $request ){
         $book = new Books();
         $book->price=$request->input('price');
         $book->name=$request->input('name');
         $book->quantity=$request->input('quantity');
         $book->author=$request->input('author');
         $book->description=$request->input('description');
-        $book->file=$request->file('file')->store('apiDocs');
+        $date = Carbon::now();
+        $file=$request->file;
+        $filePath = '/images/books/' . $date->year;
+        $filename = $date->timestamp . '_' . $file->getClientOriginalName();
+        $book->file = $file->storeAs($filePath, $filename, 'public');;
         $book->user_id = auth()->id();
         $book->save();
-       return new BookResource($book);
+        return new BookResource($book);
     }
-
+  
     public function destroy($image)
     {
         Storage::disk('s3')->delete('apiDocs/' . $image);
@@ -61,10 +66,11 @@ class FileController extends Controller
         $books=Books::all();
         return User::find($books->user_id=auth()->id())->books; 
     }
+    
     public function updateBook(Request $request, $id){
-      
-       
-            $book=Books::where('id')
+        $book=Books::findOrFail($id);
+        if($book->user_id==auth()->id()){
+            $book=Books::where('id',$id)
                 ->update(array('name'=>$request->input('name'),
                                'price' => $request->input('price'),
                                'author' => $request->input('author'),
@@ -72,7 +78,7 @@ class FileController extends Controller
                                'quantity'=>$request->input('quantity')
             ));
             return['updated successfully'];
-        
+        }
     }
     
     public function DeleteBook($id)

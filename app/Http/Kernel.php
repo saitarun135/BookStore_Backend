@@ -8,7 +8,7 @@ class Kernel extends HttpKernel
 {
     /**
      * The application's global HTTP middleware stack.
-     *
+     * contain array of bootstrappers (http/kernel)
      * These middleware are run during every request to your application.
      *
      * @var array
@@ -62,5 +62,9 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+    //     'jwt.auth' => \Tymon\JWTAuth\Middleware\GetUserFromToken,
+    // 'jwt.refresh' => \Tymon\JWTAuth\Middleware\RefreshToken,
+    'auth.jwt'=>\App\Http\Middleware\JwtMiddleWare::class,
+
     ];
 }

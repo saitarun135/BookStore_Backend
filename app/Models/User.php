@@ -5,9 +5,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticable;
 
-class User extends Authenticable implements JWTSubject 
+class User extends Authenticable implements JWTSubject
 {
     use HasFactory, Notifiable;
 
@@ -18,9 +19,9 @@ class User extends Authenticable implements JWTSubject
      */
     protected $fillable = [
         'fullName',
-        'emailID',
+        'email',
         'password',
-        'mobile'
+        'mobile',   
     ];
 
     /**
@@ -57,5 +58,12 @@ class User extends Authenticable implements JWTSubject
      */
     public function getJWTCustomClaims() {
         return [];
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+    public function books(){
+        return $this->hasMany('App\Models\Books', 'user_id');
     }
 }
