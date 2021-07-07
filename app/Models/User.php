@@ -22,7 +22,17 @@ class User extends Authenticable implements JWTSubject
         'email',
         'password',
         'mobile',   
+        'role'
     ];
+
+    // public function isAdmin() {
+    //     return $this->role === 'admin';
+    //  }
+ 
+    //  public function isUser() {
+    //     return $this->role === 'user';
+    //  }
+
 
     /**
      * The attributes that should be hidden for arrays.
