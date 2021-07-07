@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserController extends Controller
 {
-    // AWS_USE_PATH_STYLE_ENDPOINT=false
+   
     public function __construct() {
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
@@ -19,13 +19,15 @@ class UserController extends Controller
             'fullName'=>'required|string|between:3,15',
             'email'=>'required|email|unique:users',
             'password'=>'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
-            'mobile'=>'required|digits:10'
+            'mobile'=>'required|digits:10',
+            'role'=>'required|in:user,admin'
             ]);
         $user = new User([
             'fullName'=> $request->input('fullName'),
             'email'=> $request->input('email'),
             'password'=> bcrypt($request->input('password')),
-            'mobile'=>$request->input('mobile')           
+            'mobile'=>$request->input('mobile'),
+            'role'=>$request->role ,          
         ]);
         $user->save();
         return response()->json(['message'=>'Successfully Created user'],201);
@@ -37,6 +39,7 @@ class UserController extends Controller
             'password' => 'required'
         ]);
         $credentials = $request->only('email', 'password');
+      
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Invalid Credentials'], 401);
@@ -44,6 +47,9 @@ class UserController extends Controller
         }catch (JWTException $e) {
             return response()->json(['error' => 'Could not create token'],500);
         }
+       
         return response()->json(['token' => $token], 200);
+      
+       
     }
 }
