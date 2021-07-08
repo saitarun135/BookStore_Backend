@@ -20,7 +20,7 @@ class UserController extends Controller
             'email'=>'required|email|unique:users',
             'password'=>'required|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{6,}$/',
             'mobile'=>'required|digits:10',
-            'role'=>'required|in:user,admin'
+            'role'=>'required|in:User,Admin'
             ]);
         $user = new User([
             'fullName'=> $request->input('fullName'),
@@ -39,7 +39,7 @@ class UserController extends Controller
             'password' => 'required'
         ]);
         $credentials = $request->only('email', 'password');
-      
+        $role=User::where('email', $request->email)->value('role');
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Invalid Credentials'], 401);
@@ -48,7 +48,7 @@ class UserController extends Controller
             return response()->json(['error' => 'Could not create token'],500);
         }
        
-        return response()->json(['token' => $token], 200);
+        return response()->json(['token' => $token,'role'=>$role], 200);
       
        
     }
