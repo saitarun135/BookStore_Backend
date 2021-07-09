@@ -34,24 +34,40 @@ class FileController extends Controller
             return response()->json(['error' => 'UnAuthorized/invalid id'], 401);    
             }
     }
-
-    public function searchbooks($name)
-    {
+    public function searchBooksByAuthor($author){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
-             $searchBooks=  Books::where("name",$name)->get();
+             $searchBooks=  Books::where("author","like","%".$author."%")->get();
              return response()->json(['books' => $searchBooks], 200);
         }
         else{
             return response()->json(['error'=>'no books '],404);
         }
     }
+    public function searchbooks($name)
+    {
+        $books=Books::all();
+        if(User::find($books->user_id=auth()->id())->books){
+             $searchBooks=  Books::where("name","like","%".$name."%")->get();
+             return response()->json(['books' => $searchBooks], 200);
+        }
+        else{
+            return response()->json(['error'=>'no books '],404);
+        }
+    }
+    public function searchBooksbyPrice($price){
+        $books=Books::all();
+        if(User::find($books->user_id=auth()->id())->books){
+            $searchBooks=Books::where("price",$price)->get();
+            return response()->json(['books'=>$searchBooks],200);
+        }
+    }
 
     public function sortBooksHighToLow(){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
-            $returnBooks=Books::orderBy('price','DESC')->get();
-            return response()->json(['books'=>$returnBooks],200);
+            return Books::orderBy('price','DESC')->get();
+            // return response()->json(['books'=>$returnBooks],200);
         }
         else{
             return response()->json(['error'=>'error'],401);
@@ -61,8 +77,8 @@ class FileController extends Controller
     public function sortBooksLowToHigh(){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
-            $returnBooks=Books::orderBy('price','ASC')->get();
-            return response()->json(['books'=>$returnBooks],200);
+           return Books::orderBy('price','ASC')->get();
+            // return response()->json(['books'=>$returnBooks],200);
         }
     }
 
