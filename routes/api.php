@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\BooksController;
 use App\Http\Controllers\FileController;
+use Facade\FlareClient\Stacktrace\File;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,4 +48,12 @@ Route::group(["middleware"=>['auth.jwt']],function(){
     Route::get('showBook/{id}',[FileController::class,'display_Book']);
     Route::put('updateBook/{id}',[FileController::class,'updateBook']);
     Route::delete('deleteBook/{id}',[FileController::class,'DeleteBook']);
+    Route::get('searchBooksbyName/{name}',[FileController::class,'searchbooks']);
+    Route::get('searchBookbyAuthor/{author}',[FileController::class,'searchBooksByAuthor']);
+    Route::get('sortHightoLow',[FileController::class,'sortBooksHighToLow']);
+    Route::get('sortLowtoHigh',[FileController::class,'sortBooksLowToHigh']);
+    Route::get('searchBookbyprice/{price}',[FileController::class,'searchBooksbyPrice']);
+    Route::get('cart',[FileController::class,'cartItem']);
+    Route::put('addtocart/{id}',[FileController::class,'AddToCart']);
+    Route::put('removecart/{id}',[FileController::class,'RemoveFromCart']);
 });
