@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Books;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Resources\Books as BookResource;
 
@@ -48,8 +49,8 @@ class FileController extends Controller
     {
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
-             $searchBooks=  Books::where("name","like","%".$name."%")->get();
-             return response()->json(['books' => $searchBooks], 200);
+            return  Books::where("name","like","%".$name."%")->get();
+            //  return response()->json(['books' => $searchBooks], 200);
         }
         else{
             return response()->json(['error'=>'no books '],404);
@@ -78,10 +79,24 @@ class FileController extends Controller
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
            return Books::orderBy('price','ASC')->get();
-            // return response()->json(['books'=>$returnBooks],200);
         }
     }
-
+    public function AddToCart(Request $request,$id){
+        $book=Books::findOrFail($id);
+        if($book->user_id==auth()->id()){
+            $book=Books::where('id',$id)
+                ->update(array('cart'=>'1',
+            ));
+            return['updated successfully'];
+        }
+    }
+  
+    public function cartItem(){
+        $books=Books::all();
+        if(User::find($books->user_id=auth()->id())->books){
+           return  Books::whereIn('cart', ['1'])->get();
+        }
+    }
     public function displayBooks()
     {
         $books=Books::all();
@@ -116,7 +131,7 @@ class FileController extends Controller
                 'error' => ' Method Not Allowed/invalid Book id'], 405);
         }
     }
-
+ 
     public function index()
     {
         $url = 'https://s3.' . env('AWS_DEFAULT_REGION') . '.amazonaws.com/' . env('AWS_BUCKET') . '/';
