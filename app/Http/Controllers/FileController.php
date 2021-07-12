@@ -90,7 +90,13 @@ class FileController extends Controller
             return['updated successfully'];
         }
     }
-  
+    public function RemoveFromCart(Request $request,$id){
+        $book=Books::findOrFail($id);
+        if($book->user_id=auth()->id()){
+            $book=Books::where('id',$id)->update(array('cart'=>'0'));
+            return['removed from cart'];
+        }
+    }
     public function cartItem(){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
