@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\BooksController;
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\FileController;
 use Facade\FlareClient\Stacktrace\File;
 
@@ -57,3 +58,6 @@ Route::group(["middleware"=>['auth.jwt']],function(){
     Route::put('addtocart/{id}',[FileController::class,'AddToCart']);
     Route::put('removecart/{id}',[FileController::class,'RemoveFromCart']);
 });
+
+Route::post('customerRegister', [CustomersController::class, 'customerRegistration']);
+Route::delete('customerdelete/{id}', [CustomersController::class,'DeleteCustomer']);
