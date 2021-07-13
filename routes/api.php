@@ -58,6 +58,7 @@ Route::group(["middleware"=>['auth.jwt']],function(){
     Route::put('addtocart/{id}',[FileController::class,'AddToCart']);
     Route::put('removecart/{id}',[FileController::class,'RemoveFromCart']);
 });
-
 Route::post('customerRegister', [CustomersController::class, 'customerRegistration']);
 Route::delete('customerdelete/{id}', [CustomersController::class,'DeleteCustomer']);
+Route::post('mail',[CustomersController::class,'orderSuccessfull']);
+Route::get('orderid/{customer_id}',[CustomersController::class,'getOrderID']);
