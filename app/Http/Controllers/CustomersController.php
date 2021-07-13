@@ -4,39 +4,61 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customers;
+use App\Models\Orders;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Http\Resources\Books;
+use App\Models\Books as ModelsBooks;
+use Illuminate\Support\Facades\Auth;
+use App\Notifications\orderSuccessfullNotification;
+
 
 class CustomersController extends Controller
 {
     public function customerRegistration(Request $request)
     {
-        $this->validate($request, [
-            'name'=>'required|string|between:3,15',
-            'phoneNumber'=>'required|digits:10',
-            'pincode'=>'required|digits_between:5,8',
-            'locality'=>'required|string|between:3,15', 
-            'city'=>'required|string|between:3,15',
-            'address'=>'required',
-            'landmark'=>'required|between:3,15',
-            'type'=>'required|in:Home,Work,Other'
-            ]);
-        $customer = new Customers([
-            'name'=>$request->name,
-            'phoneNumber'=>$request->phoneNumber,
-            'pincode'=>$request->pincode,
-            'locality'=>$request->locality, 
-            'city'=>$request->city,
-            'address'=>$request->address,
-            'landmark'=>$request->landmark,
-            'type'=>$request->type
-                     
-        ]);
+        $customer =new Customers();
+        $customer->name=$request->input('name');
+        $customer->phoneNumber=$request->input('phoneNumber');
+        $customer->pincode=$request->input('pincode');
+        $customer->locality=$request->input('locality');
+        $customer->city=$request->input('city');
+        $customer->address=$request->input('address');
+        $customer->landmark=$request->input('landmark');
+        $customer->type=$request->input('type');
+        $customer->user_id = auth()->id();
         $customer->save();
-        return response()->json(['message'=>'Successfully customer registered'],201);
+        return ['successfully customer registered'];
     }
 
-    public function DeleteCustomer($id){
-        $customer=Customers::findOrFail($id);
-        $customer->delete();
-        return['Deleted'];
+  public function orderSuccessfull(Request $request){
+      $cust=new Customers();
+      $cust->user_id = auth()->id();
+      $cust_id=Customers::where('user_id',$cust->user_id)->value('user_id');
+      
+  
+      
+
+      $user_email=User::where('id',$cust_id)->value('email');
+      
+      $order = User::where('email', $user_email)->first();
+      $ord = Orders::create(        
+        [
+            'orderNumber' => $order->orderNumber=Str::random(6),
+            'customer_id'=>$order->id,
+            'order_date'=>$order->order_date=Carbon::now(),
+            
+        ]
+    );
+    //  return response()->json(['status'=>$ord]);
+    if($order && $ord){
+    $order->notify(new orderSuccessfullNotification($ord->orderNumber));
     }
+      return response()->json(['message'=>'order created successfully']);
+  }
+
+ 
+
 }
