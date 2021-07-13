@@ -18,4 +18,7 @@ class Customers extends Model
         'landmark',
         'type'
     ];
+    // public function orders(){
+    //     return $this->hasMany('App\Models\Orders','customer_id');
+    // }
 }
