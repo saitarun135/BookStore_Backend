@@ -21,9 +21,9 @@ class FileController extends Controller
         $book->author=$request->input('author');
         $book->description=$request->input('description');
         $book->file=$request->input('file');
-        $book->user_id = auth()->id();
+        $book->user_id = auth()->id();        
         $book->save();
-        return new BookResource($book);
+        return response()->json(['books'=>$book]);
     }
 
     public function display_Book($id)
@@ -35,6 +35,7 @@ class FileController extends Controller
             return response()->json(['error' => 'UnAuthorized/invalid id'], 401);    
             }
     }
+
     public function searchBooksByAuthor($author){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
@@ -45,17 +46,18 @@ class FileController extends Controller
             return response()->json(['error'=>'no books '],404);
         }
     }
+    
     public function searchbooks($name)
     {
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
             return  Books::where("name","like","%".$name."%")->get();
-            //  return response()->json(['books' => $searchBooks], 200);
         }
         else{
             return response()->json(['error'=>'no books '],404);
         }
     }
+
     public function searchBooksbyPrice($price){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
@@ -68,7 +70,6 @@ class FileController extends Controller
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
             return Books::orderBy('price','DESC')->get();
-            // return response()->json(['books'=>$returnBooks],200);
         }
         else{
             return response()->json(['error'=>'error'],401);
@@ -81,6 +82,7 @@ class FileController extends Controller
            return Books::orderBy('price','ASC')->get();
         }
     }
+
     public function AddToCart(Request $request,$id){
         $book=Books::findOrFail($id);
         if($book->user_id==auth()->id()){
@@ -90,6 +92,7 @@ class FileController extends Controller
             return['updated successfully'];
         }
     }
+    
     public function RemoveFromCart(Request $request,$id){
         $book=Books::findOrFail($id);
         if($book->user_id=auth()->id()){
@@ -97,12 +100,14 @@ class FileController extends Controller
             return['removed from cart'];
         }
     }
+    
     public function cartItem(){
         $books=Books::all();
         if(User::find($books->user_id=auth()->id())->books){
            return  Books::whereIn('cart', ['1'])->get();
         }
     }
+    
     public function displayBooks()
     {
         $books=Books::all();

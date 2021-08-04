@@ -22,7 +22,7 @@ class User extends Authenticable implements JWTSubject
         'email',
         'password',
         'mobile',   
-        'role'
+        
     ];
 
     // public function isAdmin() {
@@ -75,5 +75,8 @@ class User extends Authenticable implements JWTSubject
     }
     public function books(){
         return $this->hasMany('App\Models\Books', 'user_id');
+    }
+    public function customers(){
+        return $this->hasMany('App\Models\Customers','user_id');
     }
 }
